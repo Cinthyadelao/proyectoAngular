@@ -1,0 +1,51 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Pais</th>
+      <th scope="col">ID</th>
+      <th scope="col">nombre</th>
+      <th scope="col">edad</th>
+      <th scope="col">correo</th>
+      <th scope="col">acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let usuario of usuarios; index as i;">
+      <td>
+        <ng-container [ngSwitch]="usuario.nacionalidad">
+          <ng-container *ngSwitchCase="'MX'">
+            <img src="assets/images/mex.png" alt="">
+            <span>{{usuario.nacionalidad}}</span>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'CO'" [ngTemplateOutlet]="nacionalidadColombia"
+            [ngTemplateOutletContext]="{nacionalidad:usuario.nacionalidad}"></ng-container>
+          <img *ngSwitchCase="'BR'" src="assets/images/bra.png" alt="">
+          <img *ngSwitchDefault src="assets/images/bandera.png" alt="">
+        </ng-container>
+      </td>
+      <td>{{usuario.id}}</td>
+      <td [ngClass]="{'morado': usuario.edad > 31}" [ngStyle]="{'background': usuario.edad > 31 ? 'yellow' : ''}">
+        {{usuario.nombre}}</td>
+      <td [style.backgroundColor]=" usuario.edad > 31 ? 'yellow' : ''">{{usuario.edad}}</td>
+      <td [class.morado]="usuario.edad > 31">{{usuario.correo}}</td>
+      <td>
+        <button *ngIf="usuario.permisos.mostrar" class="btn btn-primary" (click)="alertarIndice(i)">Mostrar</button>
+        <button *ngIf="usuario.permisos.editar">Editar</button>
+        <button *ngIf="usuario.permisos.eliminar">Eliminar</button>
+        <button (click)="emitirUserId(usuario.id)">Seleccionar</button>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<ng-template #colombia let-usuario='usuario'>
+  <img src="assets/images/col.png" alt="">
+  <span>{{usuario.nacionalidad}}</span>
+</ng-template>
+
+<ng-template #nacionalidadColombia let-nacionalidad='nacionalidad'>
+  <img src="assets/images/col.png" alt="">
+  <span>{{nacionalidad}}</span>
+</ng-template>
